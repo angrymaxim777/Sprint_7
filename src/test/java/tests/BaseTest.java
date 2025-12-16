@@ -23,15 +23,20 @@ public class BaseTest {
         cleanupTestCourier();
     }
 
-    private void cleanupTestCourier() {
-        if (courierId != null) {
+    protected void cleanupTestCourier() {
+        if (courierId != null && !courierId.isEmpty()) {
             try {
                 Response deleteResponse = courierSteps.deleteCourier(courierId);
                 if (deleteResponse.statusCode() == 200) {
-                    System.out.println("Курьер удален: " + courierId);
+                    System.out.println("Курьер успешно удален: " + courierId);
+                } else {
+                    System.out.println("Не удалось удалить курьера. Код ответа: " + deleteResponse.statusCode());
                 }
             } catch (Exception e) {
-                System.out.println("Не удалось удалить курьера: " + e.getMessage());
+                System.out.println("Исключение при удалении курьера: " + e.getMessage());
+            } finally {
+                courierId = null;
+                testCourier = null;
             }
         }
     }

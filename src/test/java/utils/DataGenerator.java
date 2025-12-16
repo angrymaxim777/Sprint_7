@@ -7,6 +7,7 @@ import io.qameta.allure.Step;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.Collections;
 
 public class DataGenerator {
 
@@ -23,21 +24,23 @@ public class DataGenerator {
     @Step("Сгенерировать курьера без поля {missingField}")
     public static CourierDto generateCourierWithoutField(String missingField) {
         String uniqueId = UUID.randomUUID().toString().substring(0, 8);
-        CourierDto courier = new CourierDto(
-                "courier_" + uniqueId,
-                "password_" + uniqueId,
-                "CourierName_" + uniqueId
-        );
+        String login = "courier_" + uniqueId;
+        String password = "password_" + uniqueId;
+        String firstName = "CourierName_" + uniqueId;
 
-        if ("login".equals(missingField)) {
-            courier.setLogin(null);
-        } else if ("password".equals(missingField)) {
-            courier.setPassword(null);
-        } else if ("firstName".equals(missingField)) {
-            courier.setFirstName(null);
+        switch (missingField) {
+            case "login":
+                login = null;
+                break;
+            case "password":
+                password = null;
+                break;
+            case "firstName":
+                firstName = null;
+                break;
         }
 
-        return courier;
+        return new CourierDto(login, password, firstName);
     }
 
     @Step("Сгенерировать заказ с цветами {colors}")
@@ -58,8 +61,8 @@ public class DataGenerator {
     @Step("Получить варианты цветов для параметризации")
     public static Object[][] getColorVariants() {
         return new Object[][]{
-                {"BLACK", Arrays.asList("BLACK")},
-                {"GREY", Arrays.asList("GREY")},
+                {"BLACK", Collections.singletonList("BLACK")},
+                {"GREY", Collections.singletonList("GREY")},
                 {"BLACK и GREY", Arrays.asList("BLACK", "GREY")},
                 {"Без цвета", null}
         };
